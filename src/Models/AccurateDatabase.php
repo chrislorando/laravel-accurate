@@ -5,6 +5,20 @@ namespace ChrisLorando\LaravelAccurate\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property int $connection_id
+ * @property string $database_id
+ * @property string $alias
+ * @property string $company_name
+ * @property string $host
+ * @property string $session_id
+ * @property \Illuminate\Support\Carbon|null $session_expires_at
+ * @property bool $is_default
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
+ * @property-read \ChrisLorando\LaravelAccurate\Models\AccurateConnection $connection
+ */
 class AccurateDatabase extends Model
 {
     protected $table = 'accurate_databases';

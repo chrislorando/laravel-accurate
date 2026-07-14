@@ -5,6 +5,24 @@ namespace ChrisLorando\LaravelAccurate\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $client_id
+ * @property string $client_secret
+ * @property string $access_token
+ * @property string|null $refresh_token
+ * @property string $token_type
+ * @property \Illuminate\Support\Carbon|null $expires_at
+ * @property string|null $accurate_user_id
+ * @property string|null $accurate_user_name
+ * @property string|null $accurate_user_nickname
+ * @property string|null $accurate_user_email
+ * @property string|null $accurate_user_mobile
+ * @property array|null $scopes
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
+ */
 class AccurateConnection extends Model
 {
     protected $table = 'accurate_connections';

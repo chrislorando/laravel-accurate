@@ -7,6 +7,8 @@
 
 Laravel package for integrating with the Accurate Online accounting API. Provides OAuth 2.0 authentication, database management, and a fluent API client.
 
+> 📘 Refer to the [Accurate Online API Documentation](https://accurate.id/api-integration/?a=WVGE671G) for full API reference.
+
 ## Installation
 
 You can install the package via composer:
