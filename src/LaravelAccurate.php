@@ -1,6 +1,7 @@
 <?php
 
 namespace ChrisLorando\LaravelAccurate;
+
 use ChrisLorando\LaravelAccurate\Http\AccountClient;
 use ChrisLorando\LaravelAccurate\Models\AccurateConnection;
 use ChrisLorando\LaravelAccurate\Models\AccurateDatabase;
@@ -55,7 +56,7 @@ class LaravelAccurate
             $databaseId
         );
 
-        if (!$this->connection) {
+        if (! $this->connection) {
             throw new \Exception(
                 'Connection not selected'
             );

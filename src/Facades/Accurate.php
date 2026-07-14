@@ -2,15 +2,16 @@
 
 namespace ChrisLorando\LaravelAccurate\Facades;
 
+use ChrisLorando\LaravelAccurate\LaravelAccurate;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \ChrisLorando\LaravelAccurate\LaravelAccurate
+ * @see LaravelAccurate
  */
 class Accurate extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-         return \ChrisLorando\LaravelAccurate\LaravelAccurate::class;
+        return LaravelAccurate::class;
     }
 }

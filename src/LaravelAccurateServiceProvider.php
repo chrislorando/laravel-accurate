@@ -30,8 +30,8 @@ class LaravelAccurateServiceProvider extends PackageServiceProvider
         $this->app->singleton(
             LaravelAccurate::class,
             fn () => new LaravelAccurate(
-                    $this->app->make(OAuthClient::class),
-                    $this->app->make(AccountClient::class),
+                $this->app->make(OAuthClient::class),
+                $this->app->make(AccountClient::class),
             )
         );
     }

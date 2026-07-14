@@ -11,7 +11,7 @@ class AccurateDatabase extends Model
 
     protected $fillable = [
         'connection_id', 'database_id', 'alias', 'company_name',
-        'host', 'session_id', 'session_expires_at', 'is_default'
+        'host', 'session_id', 'session_expires_at', 'is_default',
     ];
 
     protected $hidden = ['session_id'];
@@ -21,7 +21,7 @@ class AccurateDatabase extends Model
         return [
             'session_id' => 'encrypted',
             'session_expires_at' => 'datetime',
-            'is_default' => 'boolean'
+            'is_default' => 'boolean',
         ];
     }
 

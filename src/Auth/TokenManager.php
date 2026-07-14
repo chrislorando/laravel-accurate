@@ -9,7 +9,8 @@ class TokenManager
 {
     public function __construct(protected OAuthClient $oauth) {}
 
-    public function ensureValid(AccurateConnection $connection, bool $forceRefresh = false): void {
+    public function ensureValid(AccurateConnection $connection, bool $forceRefresh = false): void
+    {
         if (! $forceRefresh && ! $connection->isTokenExpired()) {
             return;
         }

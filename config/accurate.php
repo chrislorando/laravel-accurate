@@ -23,7 +23,7 @@ return [
     'base_url' => env('ACCURATE_BASE_URL', 'https://account.accurate.id'),
 
     'timeout' => 30,
-    
+
     'verify_ssl' => true,
 
     'routes' => [

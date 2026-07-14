@@ -11,9 +11,9 @@ class AccurateConnection extends Model
 
     protected $fillable = [
         'name', 'client_id', 'client_secret',
-        'access_token', 'refresh_token', 'token_type', 'expires_at', 
+        'access_token', 'refresh_token', 'token_type', 'expires_at',
         'accurate_user_id', 'accurate_user_name', 'accurate_user_nickname', 'accurate_user_email', 'accurate_user_mobile',
-        'scopes'
+        'scopes',
     ];
 
     protected $hidden = ['client_secret', 'access_token', 'refresh_token'];

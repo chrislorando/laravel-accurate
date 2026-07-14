@@ -2,8 +2,8 @@
 
 namespace ChrisLorando\LaravelAccurate\OAuth;
 
-use Illuminate\Http\Request;
 use ChrisLorando\LaravelAccurate\Models\AccurateConnection;
+use Illuminate\Http\Request;
 
 class CallbackController
 {
@@ -13,7 +13,7 @@ class CallbackController
     {
         $code = $request->code;
 
-        if (!$code) {
+        if (! $code) {
             throw new \Exception('Authorization code missing');
         }
 

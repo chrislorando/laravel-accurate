@@ -10,7 +10,8 @@ class AccountClient
 {
     protected GuzzleClient $http;
 
-    public function __construct(protected TokenManager $tokenManager) {
+    public function __construct(protected TokenManager $tokenManager)
+    {
         $this->http = new GuzzleClient([
             'base_uri' => config(
                 'accurate.base_url',
@@ -27,8 +28,9 @@ class AccountClient
         ]);
     }
 
-    public function databaseList(AccurateConnection $connection): array {
-        
+    public function databaseList(AccurateConnection $connection): array
+    {
+
         $this->tokenManager->ensureValid(
             $connection
         );
@@ -52,7 +54,8 @@ class AccountClient
         ) ?? [];
     }
 
-    public function openDatabase(AccurateConnection $connection, string $databaseId): array {
+    public function openDatabase(AccurateConnection $connection, string $databaseId): array
+    {
 
         $this->tokenManager->ensureValid(
             $connection
@@ -75,19 +78,16 @@ class AccountClient
             ]
         );
 
-
         $data = json_decode(
             $response->getBody()->getContents(),
             true
         ) ?? [];
-
 
         if (! isset($data['session'])) {
             throw new \RuntimeException(
                 'Unable to open Accurate database.'
             );
         }
-
 
         return [
             'host' => $data['host'],

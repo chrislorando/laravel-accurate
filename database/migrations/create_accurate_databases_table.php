@@ -22,7 +22,7 @@ return new class extends Migration
 
             $table->unique([
                 'connection_id',
-                'database_id'
+                'database_id',
             ]);
         });
     }

@@ -20,7 +20,7 @@ class OAuthClient
     {
         $state ??= str()->random(40);
 
-        return config('accurate.base_url') . '/oauth/authorize?' . http_build_query([
+        return config('accurate.base_url').'/oauth/authorize?'.http_build_query([
             'client_id' => config('accurate.client_id'),
             'redirect_uri' => config('accurate.redirect_uri'),
             'response_type' => 'code',
@@ -33,8 +33,8 @@ class OAuthClient
     {
         $response = $this->client->post('/oauth/token', [
             'headers' => [
-                'Authorization' => 'Basic ' . base64_encode(
-                    config('accurate.client_id') . ':' . config('accurate.client_secret')
+                'Authorization' => 'Basic '.base64_encode(
+                    config('accurate.client_id').':'.config('accurate.client_secret')
                 ),
                 'Accept' => 'application/json',
             ],
@@ -50,7 +50,7 @@ class OAuthClient
             true
         );
 
-        if (!isset($data['access_token'])) {
+        if (! isset($data['access_token'])) {
             throw new \Exception('Failed to get access token');
         }
 
@@ -61,8 +61,8 @@ class OAuthClient
     {
         $response = $this->client->post('/oauth/token', [
             'headers' => [
-                'Authorization' => 'Basic ' . base64_encode(
-                    config('accurate.client_id') . ':' . config('accurate.client_secret')
+                'Authorization' => 'Basic '.base64_encode(
+                    config('accurate.client_id').':'.config('accurate.client_secret')
                 ),
                 'Accept' => 'application/json',
             ],
@@ -77,7 +77,7 @@ class OAuthClient
             true
         );
 
-        if (!isset($data['access_token'])) {
+        if (! isset($data['access_token'])) {
             throw new \Exception('Failed to refresh access token');
         }
 
