@@ -4,6 +4,7 @@ namespace ChrisLorando\LaravelAccurate\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -13,11 +14,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $company_name
  * @property string $host
  * @property string $session_id
- * @property \Illuminate\Support\Carbon|null $session_expires_at
+ * @property Carbon|null $session_expires_at
  * @property bool $is_default
- * @property \Illuminate\Support\Carbon $created_at
- * @property \Illuminate\Support\Carbon $updated_at
- * @property-read \ChrisLorando\LaravelAccurate\Models\AccurateConnection $connection
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property-read AccurateConnection $connection
  */
 class AccurateDatabase extends Model
 {

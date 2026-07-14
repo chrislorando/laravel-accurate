@@ -4,6 +4,7 @@ namespace ChrisLorando\LaravelAccurate\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -13,15 +14,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $access_token
  * @property string|null $refresh_token
  * @property string $token_type
- * @property \Illuminate\Support\Carbon|null $expires_at
+ * @property Carbon|null $expires_at
  * @property string|null $accurate_user_id
  * @property string|null $accurate_user_name
  * @property string|null $accurate_user_nickname
  * @property string|null $accurate_user_email
  * @property string|null $accurate_user_mobile
  * @property array|null $scopes
- * @property \Illuminate\Support\Carbon $created_at
- * @property \Illuminate\Support\Carbon $updated_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  */
 class AccurateConnection extends Model
 {
