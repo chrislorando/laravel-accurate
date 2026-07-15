@@ -83,6 +83,102 @@ $databases = Accurate::connection('default')->databases();
 $db = Accurate::connection('default')->openDatabase('123456');
 ```
 
+### Resource API (Item)
+
+Every Accurate resource (item, customer, invoice, etc.) exposes CRUD operations via a consistent resource class.
+
+#### Basic CRUD
+
+```php
+$items = Accurate::connection('default')
+    ->openDatabase('2759883')
+    ->items();
+
+// List all items
+$all = $items->list(['sp.pageSize' => 20]);
+
+// Get a single item by ID
+$detail = $items->detail('53');
+
+// Create or update an item
+$saved = $items->save([
+    'name'     => 'Kabel USB-C',
+    'itemType' => 'INVENTORY',
+    'unit1Name'=> 'Pcs',
+]);
+
+// Delete an item by ID
+$items->delete('53');
+
+// Bulk save (max 100 items per request)
+$items->bulkSave([
+    'data' => [
+        ['name' => 'Item A', 'itemType' => 'INVENTORY'],
+        ['name' => 'Item B', 'itemType' => 'INVENTORY'],
+    ],
+]);
+```
+
+### Query Builder
+
+Fluent query builder with filter, sort, pagination, and shorthand operators:
+
+```php
+$results = Accurate::connection('default')
+    ->openDatabase('2759883')
+    ->items()
+    ->query()
+    ->select('id', 'no', 'name', 'unit1NameWarehouse')
+    ->where('keywords', 'like', 'Kabel')     // CONTAIN search
+    ->where('itemType', 'INVENTORY')         // EQUAL (default)
+    ->where('unitPrice', '>', 10000)         // GREATER_THAN
+    ->orderBy('name', 'asc')
+    ->limit(20)
+    ->page(1)
+    ->get();
+
+// Get single record (or null)
+$first = Accurate::connection('default')
+    ->openDatabase('2759883')
+    ->items()
+    ->query()
+    ->select('id', 'name')
+    ->orderBy('id', 'desc')
+    ->first();
+
+// Paginate with metadata (sp.page, sp.pageSize, sp.totalPage, sp.totalData)
+$paged = Accurate::connection('default')
+    ->openDatabase('2759883')
+    ->items()
+    ->query()
+    ->select('id', 'name')
+    ->where('keywords', 'like', 'Kabel')
+    ->limit(10)
+    ->paginate();
+
+// $paged['data']  → array of items
+// $paged['sp']    → pagination metadata (page, pageSize, totalPage, totalData)
+```
+
+#### Shorthand Operator Mapping
+
+| Argument                    | Accurate Operator    | Example                                  |
+| --------------------------- | -------------------- | ---------------------------------------- |
+| 2-arg `where(field, value)` | `EQUAL`              | `where('itemType', 'INVENTORY')`         |
+| `>` / `gt`                  | `GREATER_THAN`       | `where('price', '>', 100)`               |
+| `>=` / `gte`                | `GREATER_EQUAL_THAN` | `where('price', '>=', 100)`              |
+| `<` / `lt`                  | `LESS_THAN`          | `where('price', '<', 100)`               |
+| `<=` / `lte`                | `LESS_EQUAL_THAN`    | `where('price', '<=', 100)`              |
+| `!=` / `<>`                 | `NOT_EQUAL`          | `where('name', '!=', 'test')`            |
+| `like` / `LIKE`             | `CONTAIN`            | `where('keywords', 'like', 'Kabel')`     |
+| `between`                   | `BETWEEN`            | `where('price', 'between', [1,100])`     |
+| `not_between`               | `NOT_BETWEEN`        | `where('price', 'not_between', [1,100])` |
+| `empty`                     | `EMPTY`              | `where('name', 'empty')`                 |
+| `not_empty`                 | `NOT_EMPTY`          | `where('name', 'not_empty')`             |
+| Accurate-native             | pass-through         | `where('name', 'EQUAL', 'test')`         |
+
+> **Note**: `CONTAIN` operator only works on `filter.keywords` field. Use `where('keywords', 'like', '...')` for partial text search.
+
 ## Testing
 
 ```bash
