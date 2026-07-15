@@ -13,10 +13,6 @@ return new class extends Migration
 
             $table->string('name')->unique();
 
-            // OAuth credential
-            $table->string('client_id');
-            $table->text('client_secret');
-
             // OAuth token
             $table->text('access_token');
             $table->text('refresh_token')->nullable();

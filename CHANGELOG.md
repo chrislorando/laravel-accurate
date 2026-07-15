@@ -2,6 +2,12 @@
 
 All notable changes to `laravel-accurate` will be documented in this file.
 
+## v0.2.3 - 2026-07-15
+
+### Removed
+
+- **`client_id` & `client_secret`** from `accurate_connections` table. OAuth credentials are now read exclusively from config/env (`ACCURATE_CLIENT_ID`, `ACCURATE_CLIENT_SECRET`), not duplicated in the database.
+
 ## v0.2.2 - 2026-07-15
 
 ### Fixed

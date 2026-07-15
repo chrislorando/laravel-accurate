@@ -9,8 +9,6 @@ use Illuminate\Support\Carbon;
 /**
  * @property int $id
  * @property string $name
- * @property string $client_id
- * @property string $client_secret
  * @property string $access_token
  * @property string|null $refresh_token
  * @property string $token_type
@@ -29,13 +27,13 @@ class AccurateConnection extends Model
     protected $table = 'accurate_connections';
 
     protected $fillable = [
-        'name', 'client_id', 'client_secret',
+        'name',
         'access_token', 'refresh_token', 'token_type', 'expires_at',
         'accurate_user_id', 'accurate_user_name', 'accurate_user_nickname', 'accurate_user_email', 'accurate_user_mobile',
         'scopes',
     ];
 
-    protected $hidden = ['client_secret', 'access_token', 'refresh_token'];
+    protected $hidden = ['access_token', 'refresh_token'];
 
     protected function casts(): array
     {
@@ -43,7 +41,6 @@ class AccurateConnection extends Model
             'expires_at' => 'datetime',
             'scopes' => 'array',
 
-            'client_secret' => 'encrypted',
             'access_token' => 'encrypted',
             'refresh_token' => 'encrypted',
         ];

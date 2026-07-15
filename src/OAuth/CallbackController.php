@@ -24,8 +24,6 @@ class CallbackController
                 'name' => 'default',
             ],
             [
-                'client_id' => config('accurate.client_id'),
-                'client_secret' => config('accurate.client_secret'),
                 'access_token' => $token['access_token'],
                 'refresh_token' => $token['refresh_token'] ?? null,
                 'token_type' => $token['token_type'] ?? 'Bearer',

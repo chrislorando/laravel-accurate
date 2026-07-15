@@ -14,8 +14,6 @@ beforeEach(function () {
 
     $this->connection = AccurateConnection::create([
         'name' => 'default',
-        'client_id' => 'test-client-id',
-        'client_secret' => 'test-client-secret',
         'access_token' => 'test-access-token',
         'refresh_token' => 'test-refresh-token',
         'token_type' => 'Bearer',
