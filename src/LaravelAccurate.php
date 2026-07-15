@@ -70,6 +70,8 @@ class LaravelAccurate
             ]
         );
 
+        AccurateDatabase::switchTo($this->database);
+
         return $this;
     }
 
@@ -132,6 +134,22 @@ class LaravelAccurate
     public function itemCategories(): ItemCategoryResource
     {
         return new ItemCategoryResource($this->client());
+    }
+
+    /**
+     * Get the currently active database from session, or fallback to default.
+     */
+    public static function currentDatabase(): ?AccurateDatabase
+    {
+        return AccurateDatabase::current();
+    }
+
+    /**
+     * Switch the active database in session.
+     */
+    public static function switchDatabase(AccurateDatabase $database): void
+    {
+        AccurateDatabase::switchTo($database);
     }
 
     public function get(string $endpoint, array $params = []): array

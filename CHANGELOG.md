@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-accurate` will be documented in this file.
 
+## v0.2.4 - 2026-07-15
+
+### Added
+
+- **Session-based active database tracking** — `AccurateDatabase::current()` reads the active database from session (`accurate_active_database_id`), falling back to `is_default`. `AccurateDatabase::switchTo()` persists the active database to session.
+- **Facade proxy methods** — `Accurate::currentDatabase()` and `Accurate::switchDatabase()` for ergonomic access without needing to know the model class.
+- `openDatabase()` now automatically calls `switchTo()` to persist the opened database to session.
+
 ## v0.2.3 - 2026-07-15
 
 ### Removed

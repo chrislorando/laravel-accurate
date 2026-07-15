@@ -38,7 +38,8 @@ return [
     'scopes' => [
         'item_view',
         'item_save',
-        'sales_invoice_view',
+        'item_category_view',
+        'item_category_save',
     ],
 
 ];

@@ -49,4 +49,17 @@ class AccurateDatabase extends Model
     {
         return $this->session_expires_at && $this->session_expires_at->isPast();
     }
+
+    public static function current(): ?self
+    {
+        $id = session('accurate_active_database_id');
+
+        return static::find($id)
+            ?? static::where('is_default', true)->first();
+    }
+
+    public static function switchTo(self $database): void
+    {
+        session(['accurate_active_database_id' => $database->id]);
+    }
 }
