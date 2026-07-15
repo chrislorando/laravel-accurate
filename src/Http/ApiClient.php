@@ -33,21 +33,6 @@ class ApiClient
         $this->connection = $connection;
         $this->database = $database;
 
-        // Replace base_uri and default headers — but keep any injected
-        // mock handler so tests can stub HTTP responses.
-        $this->http = new GuzzleClient(array_merge(
-            $this->http->getConfig(),
-            [
-                'base_uri' => $database->host,
-                'timeout' => config('accurate.timeout', 30),
-                'verify' => config('accurate.verify_ssl', true),
-                'headers' => array_merge(
-                    $this->http->getConfig('headers') ?? [],
-                    ['Accept' => 'application/json'],
-                ),
-            ],
-        ));
-
         return $this;
     }
 
@@ -110,8 +95,16 @@ class ApiClient
     {
         $this->tokenManager->ensureValid($this->connection);
 
+        $options = array_merge([
+            'base_uri' => $this->database->host,
+            'timeout' => config('accurate.timeout', 30),
+            'verify' => config('accurate.verify_ssl', true),
+            'headers' => [],
+        ], $options);
+
         $options['headers'] = array_merge(
-            $options['headers'] ?? [],
+            ['Accept' => 'application/json'],
+            $options['headers'],
             $this->authHeaders()
         );
 

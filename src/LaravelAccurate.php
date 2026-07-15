@@ -123,7 +123,7 @@ class LaravelAccurate
      */
     public function items(): ItemResource
     {
-        return $this->resource('item');
+        return new ItemResource($this->client());
     }
 
     /**
@@ -131,7 +131,7 @@ class LaravelAccurate
      */
     public function itemCategories(): ItemCategoryResource
     {
-        return $this->resource('item-category');
+        return new ItemCategoryResource($this->client());
     }
 
     public function get(string $endpoint, array $params = []): array
