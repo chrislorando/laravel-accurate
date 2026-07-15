@@ -3,16 +3,12 @@
 use ChrisLorando\LaravelAccurate\Auth\TokenManager;
 use ChrisLorando\LaravelAccurate\Facades\Accurate;
 use ChrisLorando\LaravelAccurate\Http\AccountClient;
+use ChrisLorando\LaravelAccurate\Http\ApiClient;
 use ChrisLorando\LaravelAccurate\Http\Resources\ItemCategoryResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\ItemResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\Resource;
-use ChrisLorando\LaravelAccurate\Http\ApiClient;
 use ChrisLorando\LaravelAccurate\Models\AccurateConnection;
 use ChrisLorando\LaravelAccurate\Models\AccurateDatabase;
-use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 
 beforeEach(function () {
@@ -165,7 +161,7 @@ it('throws for unknown resource type', function () {
     Accurate::connection('default')
         ->openDatabase('123456')
         ->resource('unknown');
-})->throws(\InvalidArgumentException::class, 'Unknown Accurate resource');
+})->throws(InvalidArgumentException::class, 'Unknown Accurate resource');
 
 // ─── ItemCategoryResource tests ────────────────────────────────────────
 

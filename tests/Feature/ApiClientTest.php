@@ -2,15 +2,11 @@
 
 use ChrisLorando\LaravelAccurate\Auth\TokenManager;
 use ChrisLorando\LaravelAccurate\Exceptions\AccurateApiException;
+use ChrisLorando\LaravelAccurate\Facades\Accurate;
 use ChrisLorando\LaravelAccurate\Http\AccountClient;
 use ChrisLorando\LaravelAccurate\Http\ApiClient;
-use ChrisLorando\LaravelAccurate\Facades\Accurate;
 use ChrisLorando\LaravelAccurate\Models\AccurateConnection;
 use ChrisLorando\LaravelAccurate\Models\AccurateDatabase;
-use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 
 beforeEach(function () {
