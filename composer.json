@@ -77,6 +77,5 @@
         "issues": "https://github.com/chrislorando/laravel-accurate/issues",
         "source": "https://github.com/chrislorando/laravel-accurate"
     },
-    "minimum-stability": "dev",
     "prefer-stable": true
 }

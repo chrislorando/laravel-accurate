@@ -40,9 +40,6 @@ return [
     'base_url' => env('ACCURATE_BASE_URL', 'https://account.accurate.id'),
     'timeout' => 30,
     'verify_ssl' => true,
-    'routes' => [
-        'enabled' => true,
-    ],
     'scopes' => ['item_view', 'invoice_view', 'customer_view'],
 ];
 ```
@@ -59,6 +56,14 @@ ACCURATE_CLIENT_ID=your-client-id
 ACCURATE_CLIENT_SECRET=your-client-secret
 ACCURATE_REDIRECT_URI=https://your-app.test/accurate/callback
 
+```
+
+Then register the callback route in your `routes/web.php`:
+
+```php
+use ChrisLorando\LaravelAccurate\Http\Controllers\CallbackController;
+
+Route::get('accurate/callback', CallbackController::class)->name('accurate.callback');
 ```
 
 Then visit `/accurate/connect` to start the OAuth flow.
