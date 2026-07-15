@@ -12,6 +12,6 @@ beforeEach(function () {
 
 it('can generate oauth url', function () {
     expect(
-        Accurate::oauth()->getAuthorizationUrl()
+        Accurate::authorizationUrl()
     )->toContain('/oauth/authorize');
 });

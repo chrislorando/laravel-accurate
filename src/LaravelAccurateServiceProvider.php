@@ -4,6 +4,7 @@ namespace ChrisLorando\LaravelAccurate;
 
 use ChrisLorando\LaravelAccurate\Commands\AccurateCommand;
 use ChrisLorando\LaravelAccurate\Http\AccountClient;
+use ChrisLorando\LaravelAccurate\Http\ApiClient;
 use ChrisLorando\LaravelAccurate\OAuth\OAuthClient;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -32,6 +33,7 @@ class LaravelAccurateServiceProvider extends PackageServiceProvider
             fn () => new LaravelAccurate(
                 $this->app->make(OAuthClient::class),
                 $this->app->make(AccountClient::class),
+                $this->app->make(ApiClient::class),
             )
         );
     }
