@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-accurate` will be documented in this file.
 
+## v0.2.2 - 2026-07-15
+
+### Fixed
+
+- **PHPStan CI failures:**
+    - `ApiClient::for()` no longer recreates `GuzzleClient` internally, removing the deprecated `Client::getConfig()` call (slated for removal in `guzzlehttp/guzzle:8.0`). Connection-specific options (`base_uri`, `timeout`, `verify`, `headers`) are now resolved per-request inside `ApiClient::request()`.
+    - `LaravelAccurate::items()` / `itemCategories()` no longer delegate to `resource()` (which returns the parent `Resource` type). They now instantiate `ItemResource` / `ItemCategoryResource` directly, satisfying the declared return type variance.
+
 ## v0.2.1 - 2026-07-15
 
 ### Added
