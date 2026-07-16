@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \ChrisLorando\LaravelAccurate\Http\Resources\Resource resource(string $name)
  * @method static \ChrisLorando\LaravelAccurate\Http\Resources\ItemResource items()
  * @method static \ChrisLorando\LaravelAccurate\Http\Resources\ItemCategoryResource itemCategories()
+ * @method static \ChrisLorando\LaravelAccurate\Http\Resources\UnitResource units()
  * @method static array get(string $endpoint, array $params = [])
  *
  * @see LaravelAccurate

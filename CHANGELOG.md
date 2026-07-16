@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-accurate` will be documented in this file.
 
+## v0.4.0 - 2026-07-16
+
+### Added
+
+- **`UnitResource`** — dedicated class for `/api/unit` endpoint. `Accurate::units()` facade shortcut with full CRUD + bulk-save + query builder support.
+- **`Accurate::put()`** test coverage — raw PUT method test added to `LaravelAccurateTest`.
+
+### Changed
+
+- **Test split** — `ResourceTest.php` split into `ItemResourceTest`, `ItemCategoryResourceTest`, `UnitResourceTest` (one per resource). Generic resource fallback tests remain in `LaravelAccurateTest`.
+- **README** — added `units()` and `itemCategories()` to typed resources examples, added `put()` to raw endpoints, updated dedicated classes note.
+
 ## v0.3.3 - 2026-07-16
 
 ### Changed

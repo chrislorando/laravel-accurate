@@ -7,6 +7,7 @@ use ChrisLorando\LaravelAccurate\Http\ApiClient;
 use ChrisLorando\LaravelAccurate\Http\Resources\ItemCategoryResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\ItemResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\Resource;
+use ChrisLorando\LaravelAccurate\Http\Resources\UnitResource;
 use ChrisLorando\LaravelAccurate\Models\AccurateConnection;
 use ChrisLorando\LaravelAccurate\Models\AccurateDatabase;
 use ChrisLorando\LaravelAccurate\OAuth\OAuthClient;
@@ -158,6 +159,7 @@ class LaravelAccurate implements Arrayable
         return match ($name) {
             'item' => new ItemResource($api),
             'item-category' => new ItemCategoryResource($api),
+            'unit' => new UnitResource($api),
             default => new class($api, $name) extends Resource
             {
                 public function __construct(ApiClient $api, string $resourceName)
@@ -183,6 +185,14 @@ class LaravelAccurate implements Arrayable
     public function itemCategories(): ItemCategoryResource
     {
         return new ItemCategoryResource($this->client());
+    }
+
+    /**
+     * Convenience shortcut for ->resource('unit').
+     */
+    public function units(): UnitResource
+    {
+        return new UnitResource($this->client());
     }
 
     /**

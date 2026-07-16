@@ -7,6 +7,7 @@ use ChrisLorando\LaravelAccurate\Http\ApiClient;
 use ChrisLorando\LaravelAccurate\Http\Resources\ItemCategoryResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\ItemResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\Resource;
+use ChrisLorando\LaravelAccurate\Http\Resources\UnitResource;
 use ChrisLorando\LaravelAccurate\Models\AccurateConnection;
 use ChrisLorando\LaravelAccurate\Models\AccurateDatabase;
 use GuzzleHttp\Psr7\Response;
@@ -133,7 +134,7 @@ it('on() still sends correct auth and session headers', function () {
 
 // ─── resource() — generic fallback ────────────────────────────────────
 
-it('resource() resolves dedicated classes for item and item-category', function () {
+it('resource() resolves dedicated classes for item, item-category, and unit', function () {
     $accountClient = Mockery::mock(AccountClient::class);
     $accountClient->shouldReceive('openDatabase')->andReturn([
         'host' => 'https://zeus.accurate.id',
@@ -151,6 +152,7 @@ it('resource() resolves dedicated classes for item and item-category', function 
 
     expect(Accurate::resource('item'))->toBeInstanceOf(ItemResource::class);
     expect(Accurate::resource('item-category'))->toBeInstanceOf(ItemCategoryResource::class);
+    expect(Accurate::resource('unit'))->toBeInstanceOf(UnitResource::class);
 });
 
 it('resource() returns generic Resource for any other name', function () {
@@ -358,6 +360,24 @@ it('itemCategories() returns ItemCategoryResource', function () {
 
     expect(Accurate::itemCategories())->toBeInstanceOf(ItemCategoryResource::class);
 });
+it('units() returns UnitResource', function () {
+    $accountClient = Mockery::mock(AccountClient::class);
+    $accountClient->shouldReceive('openDatabase')->andReturn([
+        'host' => 'https://zeus.accurate.id',
+        'session' => 'test-session-id',
+        'accessibleUntil' => '20/08/2026',
+    ]);
+    $this->app->instance(AccountClient::class, $accountClient);
+
+    $api = makeApiClient([
+        new Response(200, [], json_encode(['s' => true, 'd' => []])),
+    ]);
+    $this->app->instance(ApiClient::class, $api);
+
+    Accurate::connection('default')->openDatabase('123456');
+
+    expect(Accurate::units())->toBeInstanceOf(UnitResource::class);
+});
 
 // ─── Raw endpoint methods ─────────────────────────────────────────────
 
@@ -408,6 +428,29 @@ it('Accurate::post() sends POST request', function () {
         ->post('api/item/save.do', ['name' => 'New Item']);
 
     expect($container[0]['request']->getMethod())->toBe('POST');
+});
+
+it('Accurate::put() sends PUT request', function () {
+    $container = [];
+    $accountClient = Mockery::mock(AccountClient::class);
+    $accountClient->shouldReceive('openDatabase')->andReturn([
+        'host' => 'https://zeus.accurate.id',
+        'session' => 'test-session-id',
+        'accessibleUntil' => '20/08/2026',
+    ]);
+    $this->app->instance(AccountClient::class, $accountClient);
+
+    $api = makeApiClient([
+        new Response(200, [], json_encode(['s' => true, 'd' => ['id' => 42, 'name' => 'Updated']])),
+    ], $container);
+    $this->app->instance(ApiClient::class, $api);
+
+    Accurate::connection('default')
+        ->openDatabase('123456')
+        ->put('api/item/save.do', ['id' => '42', 'name' => 'Updated']);
+
+    expect($container[0]['request']->getMethod())->toBe('PUT');
+    expect($container[0]['request']->getUri()->getPath())->toEndWith('/api/item/save.do');
 });
 
 it('Accurate::delete() sends DELETE request', function () {

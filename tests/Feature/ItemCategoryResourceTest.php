@@ -1,12 +1,7 @@
 <?php
 
 use ChrisLorando\LaravelAccurate\Auth\TokenManager;
-use ChrisLorando\LaravelAccurate\Facades\Accurate;
-use ChrisLorando\LaravelAccurate\Http\AccountClient;
-use ChrisLorando\LaravelAccurate\Http\ApiClient;
 use ChrisLorando\LaravelAccurate\Http\Resources\ItemCategoryResource;
-use ChrisLorando\LaravelAccurate\Http\Resources\ItemResource;
-use ChrisLorando\LaravelAccurate\Http\Resources\Resource;
 use ChrisLorando\LaravelAccurate\Models\AccurateConnection;
 use ChrisLorando\LaravelAccurate\Models\AccurateDatabase;
 use GuzzleHttp\Psr7\Response;
@@ -36,137 +31,6 @@ beforeEach(function () {
     ]);
 });
 
-// ─── ItemResource direct tests ────────────────────────────────────────
-
-it('can list items via ItemResource', function () {
-    $api = makeApiClient([
-        new Response(200, [], json_encode([
-            's' => true,
-            'd' => [
-                ['id' => 1, 'name' => 'Item A'],
-                ['id' => 2, 'name' => 'Item B'],
-            ],
-        ])),
-    ])->for($this->connection, $this->database);
-
-    $resource = new ItemResource($api);
-
-    $result = $resource->list(['sp.pageSize' => 10]);
-
-    expect($result)->toHaveKey('s', true)
-        ->and($result['d'])->toHaveCount(2);
-});
-
-it('can get item detail via ItemResource', function () {
-    $container = [];
-    $api = makeApiClient([
-        new Response(200, [], json_encode([
-            's' => true,
-            'd' => ['id' => 1, 'itemNo' => 'ITEM-001', 'name' => 'Test Item'],
-        ])),
-    ], $container)->for($this->connection, $this->database);
-
-    $resource = new ItemResource($api);
-    $result = $resource->detail('1');
-
-    expect($result)->toHaveKey('s', true)
-        ->and($result['d'])->toHaveKey('itemNo', 'ITEM-001');
-
-    // Verify the correct endpoint was called
-    $request = $container[0]['request'];
-    expect($request->getUri()->getPath())->toEndWith('/api/item/detail.do');
-    expect($request->getUri()->getQuery())->toContain('id=1');
-});
-
-it('can save an item via ItemResource', function () {
-    $container = [];
-    $api = makeApiClient([
-        new Response(200, [], json_encode([
-            's' => true,
-            'd' => ['id' => 99, 'name' => 'Saved Item'],
-        ])),
-    ], $container)->for($this->connection, $this->database);
-
-    $resource = new ItemResource($api);
-    $result = $resource->save([
-        'itemType' => 'INVENTORY',
-        'name' => 'Saved Item',
-    ]);
-
-    expect($result['d'])->toHaveKey('id', 99);
-    expect($container[0]['request']->getMethod())->toBe('POST');
-    expect($container[0]['request']->getUri()->getPath())->toEndWith('/api/item/save.do');
-});
-
-it('can delete an item via ItemResource', function () {
-    $container = [];
-    $api = makeApiClient([
-        new Response(200, [], json_encode([
-            's' => true,
-            'd' => 'Item deleted successfully',
-        ])),
-    ], $container)->for($this->connection, $this->database);
-
-    $resource = new ItemResource($api);
-    $result = $resource->delete('42');
-
-    expect($result)->toHaveKey('s', true);
-    expect($container[0]['request']->getMethod())->toBe('DELETE');
-    expect($container[0]['request']->getUri()->getPath())->toEndWith('/api/item/delete.do');
-});
-
-// ─── LaravelAccurate::items() / ::resource() ───────────────────────────
-
-it('can access ItemResource through the facade helper', function () {
-    // Mock AccountClient so openDatabase doesn't make real HTTP call
-    $accountClient = Mockery::mock(AccountClient::class);
-    $accountClient->shouldReceive('openDatabase')->andReturn([
-        'host' => 'https://zeus.accurate.id',
-        'session' => 'test-session-id',
-        'accessibleUntil' => '20/08/2026',
-    ]);
-    $this->app->instance(AccountClient::class, $accountClient);
-
-    // Mock ApiClient
-    $api = makeApiClient([
-        new Response(200, [], json_encode([
-            's' => true,
-            'd' => [['id' => 1, 'name' => 'Facade Item']],
-        ])),
-    ]);
-    $this->app->instance(ApiClient::class, $api);
-
-    $result = Accurate::connection('default')
-        ->openDatabase('123456')
-        ->items()
-        ->list();
-
-    expect($result)->toHaveKey('s', true)
-        ->and($result['d'][0])->toHaveKey('name', 'Facade Item');
-});
-
-it('resource() resolves generic resource for any name', function () {
-    $accountClient = Mockery::mock(AccountClient::class);
-    $accountClient->shouldReceive('openDatabase')->andReturn([
-        'host' => 'https://zeus.accurate.id',
-        'session' => 'test-session-id',
-        'accessibleUntil' => '20/08/2026',
-    ]);
-    $this->app->instance(AccountClient::class, $accountClient);
-
-    $api = makeApiClient([]);
-    $this->app->instance(ApiClient::class, $api);
-
-    Accurate::connection('default')
-        ->openDatabase('123456');
-
-    // Any resource name is accepted — returns a generic Resource
-    $resource = Accurate::resource('customer');
-    expect($resource)->toBeInstanceOf(Resource::class);
-    expect($resource)->not->toBeInstanceOf(ItemResource::class);
-    expect($resource)->not->toBeInstanceOf(ItemCategoryResource::class);
-});
-
 // ─── ItemCategoryResource tests ────────────────────────────────────────
 
 it('can list item categories via ItemCategoryResource', function () {
@@ -183,7 +47,6 @@ it('can list item categories via ItemCategoryResource', function () {
     ], $container)->for($this->connection, $this->database);
 
     $resource = new ItemCategoryResource($api);
-
     $result = $resource->list(['sp.pageSize' => 20]);
 
     expect($result)->toHaveKey('s', true)
@@ -247,7 +110,6 @@ it('can create a child item category with parentName', function () {
 
     expect($result['d'])->toHaveKey('parentName', 'Elektronik');
 
-    // POST uses form_params (urlencoded), parse accordingly
     parse_str($container[0]['request']->getBody()->getContents(), $body);
     expect($body)->toHaveKey('name', 'Smartphone')
         ->and($body)->toHaveKey('parentName', 'Elektronik');
@@ -274,7 +136,6 @@ it('can bulk-save item categories via ItemCategoryResource', function () {
     expect($result['d'])->toHaveCount(2);
     expect($container[0]['request']->getUri()->getPath())->toEndWith('/api/item-category/bulk-save.do');
 
-    // Verify JSON body with data[] array format expected by Accurate
     $body = json_decode($container[0]['request']->getBody()->getContents(), true);
     expect($body['data'])->toHaveCount(2)
         ->and($body['data'][1])->toHaveKey('parentName', 'Kategori A');
@@ -295,33 +156,5 @@ it('can delete an item category via ItemCategoryResource', function () {
     expect($result)->toHaveKey('s', true);
     expect($container[0]['request']->getMethod())->toBe('DELETE');
     expect($container[0]['request']->getUri()->getPath())->toEndWith('/api/item-category/delete.do');
-
-    // DELETE sends id via query string (Accurate reads id from URL)
     expect($container[0]['request']->getUri()->getQuery())->toContain('id=42');
-});
-
-it('can access ItemCategoryResource through the facade helper', function () {
-    $accountClient = Mockery::mock(AccountClient::class);
-    $accountClient->shouldReceive('openDatabase')->andReturn([
-        'host' => 'https://zeus.accurate.id',
-        'session' => 'test-session-id',
-        'accessibleUntil' => '20/08/2026',
-    ]);
-    $this->app->instance(AccountClient::class, $accountClient);
-
-    $api = makeApiClient([
-        new Response(200, [], json_encode([
-            's' => true,
-            'd' => [['id' => 1, 'name' => 'Facade Category']],
-        ])),
-    ]);
-    $this->app->instance(ApiClient::class, $api);
-
-    $result = Accurate::connection('default')
-        ->openDatabase('123456')
-        ->itemCategories()
-        ->list();
-
-    expect($result)->toHaveKey('s', true)
-        ->and($result['d'][0])->toHaveKey('name', 'Facade Category');
 });

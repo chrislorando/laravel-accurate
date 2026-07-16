@@ -101,17 +101,24 @@ Accurate::connection('default')->openDatabase('1234567');
 
 // ── Step 3: Call API — session auto-resolves connection & database ──
 
-// Raw endpoints
+// Raw endpoints (any Accurate API endpoint)
 $items    = Accurate::get('api/item/list.do', ['fields' => 'id,no,name', 'sp.pageSize' => '20']);
 $detail   = Accurate::get('api/item/detail.do', ['id' => '53']);
 Accurate::post('api/item/save.do', ['name' => 'Kabel USB-C', 'itemType' => 'INVENTORY']);
+Accurate::put('api/item/save.do', ['id' => '53', 'name' => 'Updated Item']);
 Accurate::delete('api/item/delete.do', ['id' => '53']);
 
-// Typed resources (when you have a Resource class for it)
+// Typed resources (when you have a dedicated Resource class)
 Accurate::items()->list(['sp.pageSize' => 20]);
 Accurate::items()->detail('53');
 Accurate::items()->save(['name' => 'Item Baru', 'itemType' => 'INVENTORY']);
 Accurate::items()->delete('53');
+
+Accurate::itemCategories()->list();
+Accurate::itemCategories()->save(['name' => 'Elektronik']);
+
+Accurate::units()->list();
+Accurate::units()->save(['unitName' => 'Pcs']);
 
 // Generic resource by name (no class needed)
 Accurate::resource('customer')->list();
@@ -158,7 +165,7 @@ Accurate::connection('default')->on('1234567')->items()->query()
 >
 > ⚠️ The Facade is a singleton — one active database at a time per request.
 
-> ℹ️ **Only `item` and `item-category` have dedicated classes** (`items()`, `itemCategories()`).
+> ℹ️ **Dedicated classes** exist for `item` (`items()`), `item-category` (`itemCategories()`), and `unit` (`units()`).
 > For any other resource use `Accurate::resource('customer')` or raw endpoints — both shown above.
 > More dedicated resources will be added over time.
 
