@@ -166,7 +166,8 @@ it('can fetch item/list.do through the full Accurate facade chain', function () 
     $accountClient->shouldReceive('openDatabase')
         ->andReturn([
             'host' => 'https://zeus.accurate.id',
-            'session_id' => 'test-session-id',
+            'session' => 'test-session-id',
+            'accessibleUntil' => '31/12/2026',
         ]);
     $this->app->instance(AccountClient::class, $accountClient);
 

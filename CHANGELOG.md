@@ -2,6 +2,12 @@
 
 All notable changes to `laravel-accurate` will be documented in this file.
 
+## v0.3.1 - 2026-07-16
+
+### Fixed
+
+- **CI: `ApiClientTest` mock key mismatch** — `openDatabase()` mock returned `session_id` but code reads `session`. Fixed mock return + added missing `accessibleUntil` key.
+
 ## v0.3.0 - 2026-07-16
 
 ### Added
