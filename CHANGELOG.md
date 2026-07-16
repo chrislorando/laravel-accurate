@@ -2,6 +2,27 @@
 
 All notable changes to `laravel-accurate` will be documented in this file.
 
+## v0.3.0 - 2026-07-16
+
+### Added
+
+- **`on()` method** — resolve a previously-opened database from the local `accurate_databases` table with zero HTTP overhead. Ideal for background jobs, CLI commands, and fast multi-DB switching within a single request. Accepts `database_id` or `alias`.
+- **Generic `resource()` fallback** — `Accurate::resource('customer')`, `Accurate::resource('sales-invoice')`, etc. now work for _any_ resource name without needing a dedicated class. Returns an anonymous `Resource` instance with full CRUD + query builder support.
+- **Facade shortcuts** — `Accurate::items()` (`ItemResource`) and `Accurate::itemCategories()` (`ItemCategoryResource`) for typed access.
+- **Session auto-resolution** — `ensureConnection()` and `ensureDatabase()` automatically resolve connection + database from the session when no explicit `connection()` call is made. `Accurate::items()->list()` now works directly after `openDatabase()` without repeating the chain.
+- **Test coverage** — 19 new tests in `LaravelAccurateTest.php` covering `on()` (by id/alias, headers, session isolation, not-found), `resource()` (dedicated + generic fallback, list/detail/save/delete/query), facade shortcuts, raw endpoint methods, and `ensureConnection()` auto-resolution.
+
+### Changed
+
+- `openDatabase()` now returns the full Accurate response array (including `accessibleUntil`, `host`, `session`, etc.) instead of a filtered subset. The raw response is accessible via `$accurate->toArray()`.
+- `AccountClient::openDatabase()` passes through the full `$data` from Accurate instead of filtering to `host` + `session_id`.
+- README comprehensively rewritten with 4 distinct calling styles, step-by-step workflow, and a dedicated Query Builder reference section.
+
+### Fixed
+
+- Mock keys in `ResourceTest.php` (`session_id` → `session`) to match the updated `openDatabase()` response format.
+- Replaced obsolete "throws for unknown resource" test with "resolves generic resource" test.
+
 ## v0.2.4 - 2026-07-15
 
 ### Added

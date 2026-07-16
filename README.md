@@ -76,81 +76,103 @@ use ChrisLorando\LaravelAccurate\Facades\Accurate;
 // Get the authorization URL
 $url = Accurate::authorizationUrl();
 
-// Get database list for a connection
-$databases = Accurate::connection('default')->databases();
+// ── Step 1: Check available databases ──
 
-// Open a specific database
-$db = Accurate::connection('default')->openDatabase('123456');
+$dbs = Accurate::connection('default')->databases();
+
+// $dbs → ['d' => [['id' => '1234567', 'name' => 'PT ABC', ...], ...]]
+// Pick the database ID you want to work with.
+
+// ── Step 2: Open the database (hits Accurate API) ──
+
+Accurate::connection('default')->openDatabase('1234567');
+
+// ── Step 3: Call API — session auto-resolves connection & database ──
+
+// Raw endpoints
+$items    = Accurate::get('api/item/list.do', ['fields' => 'id,no,name', 'sp.pageSize' => '20']);
+$detail   = Accurate::get('api/item/detail.do', ['id' => '53']);
+Accurate::post('api/item/save.do', ['name' => 'Kabel USB-C', 'itemType' => 'INVENTORY']);
+Accurate::delete('api/item/delete.do', ['id' => '53']);
+
+// Typed resources (when you have a Resource class for it)
+Accurate::items()->list(['sp.pageSize' => 20]);
+Accurate::items()->detail('53');
+Accurate::items()->save(['name' => 'Item Baru', 'itemType' => 'INVENTORY']);
+Accurate::items()->delete('53');
+
+// Generic resource by name (no class needed)
+Accurate::resource('customer')->list();
+Accurate::resource('sales-invoice')->detail('123');
 ```
 
-### Resource API (Item)
+### Background Jobs & Multi-DB
 
-Every Accurate resource (item, customer, invoice, etc.) exposes CRUD operations via a consistent resource class.
-
-#### Basic CRUD
+The HTTP session is unavailable in queue jobs, CLI commands, or when you need
+to switch databases without a costly API call. Use `on()` to resolve a
+previously-opened database **from the local DB table** — no HTTP overhead.
 
 ```php
-$items = Accurate::connection('default')
-    ->openDatabase('2759883')
-    ->items();
+// Job / command / multi-DB — resolves session from the accurate_databases table
+Accurate::connection('default')
+    ->on('1234567')           // ← no API call, uses cached session_id
+    ->items()->list();
 
-// List all items
-$all = $items->list(['sp.pageSize' => 20]);
-
-// Get a single item by ID
-$detail = $items->detail('53');
-
-// Create or update an item
-$saved = $items->save([
-    'name'     => 'Kabel USB-C',
-    'itemType' => 'INVENTORY',
-    'unit1Name'=> 'Pcs',
-]);
-
-// Delete an item by ID
-$items->delete('53');
-
-// Bulk save (max 100 items per request)
-$items->bulkSave([
-    'data' => [
-        ['name' => 'Item A', 'itemType' => 'INVENTORY'],
-        ['name' => 'Item B', 'itemType' => 'INVENTORY'],
-    ],
-]);
+// Switch to another DB mid-request, also zero HTTP calls
+$itemsA = Accurate::connection('default')->on('1234567')->items()->list();
+$itemsB = Accurate::connection('default')->on('99999')->items()->list();
 ```
+
+| Method               | API call? | Use case                                |
+| -------------------- | --------- | --------------------------------------- |
+| `openDatabase('id')` | ✅ Yes    | First-time setup, refresh session       |
+| `on('id')`           | ❌ No     | Background jobs, CLI, fast DB switching |
+
+> 💡 **Calling styles summary:**
+>
+> - **Bare**: `Accurate::get()` / `Accurate::items()` — session auto-resolves connection + database.
+> - **Explicit connection**: `Accurate::connection('default')->items()` — pick a specific connection.
+> - **Open database**: `connection('x')->openDatabase('y')` — set/switch the active database for the session.
+> - **On (no API)**: `connection('x')->on('y')` — resolve DB from the local table, zero HTTP.
+>
+> ⚠️ The Facade is a singleton — one active database at a time per request.
+
+> ℹ️ **Only `item` and `item-category` have dedicated classes** (`items()`, `itemCategories()`).
+> For any other resource use `Accurate::resource('customer')` or raw endpoints — both shown above.
+> More dedicated resources will be added over time.
 
 ### Query Builder
 
-Fluent query builder with filter, sort, pagination, and shorthand operators:
+Fluent query builder with filter, sort, pagination, and shorthand operators.
+Available on every resource via `->query()`:
 
 ```php
-$results = Accurate::connection('default')
-    ->openDatabase('2759883')
-    ->items()
-    ->query()
+// Dedicated resource
+$results = Accurate::items()->query()
     ->select('id', 'no', 'name', 'unit1NameWarehouse')
-    ->where('keywords', 'like', 'Kabel')     // CONTAIN search
-    ->where('itemType', 'INVENTORY')         // EQUAL (default)
-    ->where('unitPrice', '>', 10000)         // GREATER_THAN
+    ->where('keywords', 'like', 'Kabel')
+    ->where('itemType', 'INVENTORY')
+    ->where('unitPrice', '>', 10000)
     ->orderBy('name', 'asc')
     ->limit(20)
     ->page(1)
     ->get();
 
+// Generic resource — same fluent API
+$customers = Accurate::resource('customer')->query()
+    ->select('id', 'name', 'email')
+    ->where('keywords', 'like', 'PT')
+    ->limit(10)
+    ->get();
+
 // Get single record (or null)
-$first = Accurate::connection('default')
-    ->openDatabase('2759883')
-    ->items()
-    ->query()
+$first = Accurate::items()->query()
     ->select('id', 'name')
     ->orderBy('id', 'desc')
     ->first();
 
 // Paginate with metadata (sp.page, sp.pageSize, sp.totalPage, sp.totalData)
-$paged = Accurate::connection('default')
-    ->openDatabase('2759883')
-    ->items()
-    ->query()
+$paged = Accurate::items()->query()
     ->select('id', 'name')
     ->where('keywords', 'like', 'Kabel')
     ->limit(10)

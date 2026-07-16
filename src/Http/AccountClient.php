@@ -89,9 +89,6 @@ class AccountClient
             );
         }
 
-        return [
-            'host' => $data['host'],
-            'session_id' => $data['session'],
-        ];
+        return $data;
     }
 }

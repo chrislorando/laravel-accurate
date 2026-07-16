@@ -122,7 +122,8 @@ it('can access ItemResource through the facade helper', function () {
     $accountClient = Mockery::mock(AccountClient::class);
     $accountClient->shouldReceive('openDatabase')->andReturn([
         'host' => 'https://zeus.accurate.id',
-        'session_id' => 'test-session-id',
+        'session' => 'test-session-id',
+        'accessibleUntil' => '20/08/2026',
     ]);
     $this->app->instance(AccountClient::class, $accountClient);
 
@@ -144,22 +145,27 @@ it('can access ItemResource through the facade helper', function () {
         ->and($result['d'][0])->toHaveKey('name', 'Facade Item');
 });
 
-it('throws for unknown resource type', function () {
+it('resource() resolves generic resource for any name', function () {
     $accountClient = Mockery::mock(AccountClient::class);
     $accountClient->shouldReceive('openDatabase')->andReturn([
         'host' => 'https://zeus.accurate.id',
-        'session_id' => 'test-session-id',
+        'session' => 'test-session-id',
+        'accessibleUntil' => '20/08/2026',
     ]);
     $this->app->instance(AccountClient::class, $accountClient);
 
-    // Mock ApiClient (will not be called)
     $api = makeApiClient([]);
     $this->app->instance(ApiClient::class, $api);
 
     Accurate::connection('default')
-        ->openDatabase('123456')
-        ->resource('unknown');
-})->throws(InvalidArgumentException::class, 'Unknown Accurate resource');
+        ->openDatabase('123456');
+
+    // Any resource name is accepted — returns a generic Resource
+    $resource = Accurate::resource('customer');
+    expect($resource)->toBeInstanceOf(Resource::class);
+    expect($resource)->not->toBeInstanceOf(ItemResource::class);
+    expect($resource)->not->toBeInstanceOf(ItemCategoryResource::class);
+});
 
 // ─── ItemCategoryResource tests ────────────────────────────────────────
 
@@ -298,7 +304,8 @@ it('can access ItemCategoryResource through the facade helper', function () {
     $accountClient = Mockery::mock(AccountClient::class);
     $accountClient->shouldReceive('openDatabase')->andReturn([
         'host' => 'https://zeus.accurate.id',
-        'session_id' => 'test-session-id',
+        'session' => 'test-session-id',
+        'accessibleUntil' => '20/08/2026',
     ]);
     $this->app->instance(AccountClient::class, $accountClient);
 

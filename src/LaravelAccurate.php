@@ -2,6 +2,7 @@
 
 namespace ChrisLorando\LaravelAccurate;
 
+use Illuminate\Contracts\Support\Arrayable;
 use ChrisLorando\LaravelAccurate\Http\AccountClient;
 use ChrisLorando\LaravelAccurate\Http\ApiClient;
 use ChrisLorando\LaravelAccurate\Http\Resources\ItemCategoryResource;
@@ -11,11 +12,16 @@ use ChrisLorando\LaravelAccurate\Models\AccurateConnection;
 use ChrisLorando\LaravelAccurate\Models\AccurateDatabase;
 use ChrisLorando\LaravelAccurate\OAuth\OAuthClient;
 
-class LaravelAccurate
+class LaravelAccurate implements Arrayable
 {
     protected ?AccurateConnection $connection = null;
 
     protected ?AccurateDatabase $database = null;
+
+    /**
+     * The raw response from the last openDatabase() call.
+     */
+    protected ?array $openedDatabase = null;
 
     public function __construct(
         protected OAuthClient $oauth,
@@ -52,6 +58,8 @@ class LaravelAccurate
             $databaseId
         );
 
+        $this->openedDatabase = $result;
+
         // The Accurate host URL does not include the API path prefix.
         // All business API endpoints are under /accurate/api/.
         $host = rtrim($result['host'], '/').'/accurate/';
@@ -65,8 +73,8 @@ class LaravelAccurate
                 'alias' => $alias ?? $databaseId,
                 'company_name' => $alias ?? $databaseId,
                 'host' => $host,
-                'session_id' => $result['session_id'],
-                'session_expires_at' => now()->addHours(2),
+                'session_id' => $result['session'],
+                'session_expires_at' => \Illuminate\Support\Carbon::createFromFormat('d/m/Y', $result['accessibleUntil']),
             ]
         );
 
@@ -75,13 +83,48 @@ class LaravelAccurate
         return $this;
     }
 
+    /**
+     * Resolve an already-opened database from the local DB table.
+     * No HTTP call — uses the cached session_id.
+     * Ideal for background jobs, CLI commands, or hot-switching
+     * between databases within the same request.
+     */
+    public function on(string $databaseId): self
+    {
+        $this->ensureConnection();
+
+        $this->database = AccurateDatabase::where('connection_id', $this->connection->id)
+            ->where(function ($query) use ($databaseId) {
+                $query->where('database_id', $databaseId)
+                    ->orWhere('alias', $databaseId);
+            })
+            ->firstOrFail();
+
+        // Do NOT switch session — on() is transient and doesn't change
+        // the active database for subsequent requests.
+
+        return $this;
+    }
+
     protected function ensureConnection(): void
     {
-        if (! $this->connection) {
-            throw new \RuntimeException(
-                'No Accurate connection selected. Call connection() first.'
-            );
+        if ($this->connection) {
+            return;
         }
+
+        // Auto-resolve from the session's active database.
+        $database = AccurateDatabase::current();
+
+        if ($database) {
+            $this->connection = $database->connection;
+            $this->database = $database;
+
+            return;
+        }
+
+        throw new \RuntimeException(
+            'No Accurate connection selected. Call connection() first.'
+        );
     }
 
     protected function ensureDatabase(): void
@@ -114,9 +157,13 @@ class LaravelAccurate
         return match ($name) {
             'item' => new ItemResource($api),
             'item-category' => new ItemCategoryResource($api),
-            default => throw new \InvalidArgumentException(
-                "Unknown Accurate resource: [{$name}]."
-            ),
+            default => new class($api, $name) extends Resource {
+                public function __construct(ApiClient $api, string $resourceName)
+                {
+                    parent::__construct($api);
+                    $this->resourceName = $resourceName;
+                }
+            },
         };
     }
 
@@ -170,5 +217,10 @@ class LaravelAccurate
     public function delete(string $endpoint, array $data = []): array
     {
         return $this->client()->delete($endpoint, $data);
+    }
+
+    public function toArray(): array
+    {
+        return $this->openedDatabase ?? [];
     }
 }
