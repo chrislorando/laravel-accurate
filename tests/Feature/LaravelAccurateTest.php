@@ -8,6 +8,7 @@ use ChrisLorando\LaravelAccurate\Http\Resources\ItemCategoryResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\ItemResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\Resource;
 use ChrisLorando\LaravelAccurate\Http\Resources\UnitResource;
+use ChrisLorando\LaravelAccurate\Http\Resources\WarehouseResource;
 use ChrisLorando\LaravelAccurate\Models\AccurateConnection;
 use ChrisLorando\LaravelAccurate\Models\AccurateDatabase;
 use GuzzleHttp\Psr7\Response;
@@ -134,7 +135,7 @@ it('on() still sends correct auth and session headers', function () {
 
 // ─── resource() — generic fallback ────────────────────────────────────
 
-it('resource() resolves dedicated classes for item, item-category, and unit', function () {
+it('resource() resolves dedicated classes for item, item-category, unit, and warehouse', function () {
     $accountClient = Mockery::mock(AccountClient::class);
     $accountClient->shouldReceive('openDatabase')->andReturn([
         'host' => 'https://zeus.accurate.id',
@@ -153,6 +154,7 @@ it('resource() resolves dedicated classes for item, item-category, and unit', fu
     expect(Accurate::resource('item'))->toBeInstanceOf(ItemResource::class);
     expect(Accurate::resource('item-category'))->toBeInstanceOf(ItemCategoryResource::class);
     expect(Accurate::resource('unit'))->toBeInstanceOf(UnitResource::class);
+    expect(Accurate::resource('warehouse'))->toBeInstanceOf(WarehouseResource::class);
 });
 
 it('resource() returns generic Resource for any other name', function () {
@@ -377,6 +379,25 @@ it('units() returns UnitResource', function () {
     Accurate::connection('default')->openDatabase('123456');
 
     expect(Accurate::units())->toBeInstanceOf(UnitResource::class);
+});
+
+it('warehouses() returns WarehouseResource', function () {
+    $accountClient = Mockery::mock(AccountClient::class);
+    $accountClient->shouldReceive('openDatabase')->andReturn([
+        'host' => 'https://zeus.accurate.id',
+        'session' => 'test-session-id',
+        'accessibleUntil' => '20/08/2026',
+    ]);
+    $this->app->instance(AccountClient::class, $accountClient);
+
+    $api = makeApiClient([
+        new Response(200, [], json_encode(['s' => true, 'd' => []])),
+    ]);
+    $this->app->instance(ApiClient::class, $api);
+
+    Accurate::connection('default')->openDatabase('123456');
+
+    expect(Accurate::warehouses())->toBeInstanceOf(WarehouseResource::class);
 });
 
 // ─── Raw endpoint methods ─────────────────────────────────────────────
