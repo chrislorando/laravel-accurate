@@ -2,6 +2,17 @@
 
 All notable changes to `laravel-accurate` will be documented in this file.
 
+## v0.4.1 - 2026-07-16
+
+### Added
+
+- **`CONTRIBUTING.md`** — development setup, project structure, and step-by-step guide for adding new dedicated resources.
+
+### Changed
+
+- **README** — added Contributing section with link to `CONTRIBUTING.md`.
+- **CONTRIBUTING.md** — removed empty `Data/` directory from project structure.
+
 ## v0.4.0 - 2026-07-16
 
 ### Added

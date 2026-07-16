@@ -235,6 +235,10 @@ $paged = Accurate::items()->query()
 composer test
 ```
 
+## Contributing
+
+Please see [CONTRIBUTING](CONTRIBUTING.md) for details on development setup, coding standards, and how to add new resource classes.
+
 ## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
