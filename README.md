@@ -58,12 +58,24 @@ ACCURATE_REDIRECT_URI=https://your-app.test/accurate/callback
 
 ```
 
-Then register the callback route in your `routes/web.php`:
+Then register the routes in your `routes/web.php`:
 
 ```php
+use ChrisLorando\LaravelAccurate\Facades\Accurate;
 use ChrisLorando\LaravelAccurate\Http\Controllers\CallbackController;
 
+// Start OAuth flow
+Route::get('accurate/connect', function () {
+    return redirect(Accurate::authorizationUrl());
+})->name('accurate.connect');
+
+// OAuth callback — handles token exchange
 Route::get('accurate/callback', CallbackController::class)->name('accurate.callback');
+
+// See available company databases (after OAuth is set up)
+Route::get('/accurate/databases', function () {
+    return Accurate::connection('default')->databases();
+});
 ```
 
 Then visit `/accurate/connect` to start the OAuth flow.
@@ -121,6 +133,15 @@ Accurate::connection('default')
 // Switch to another DB mid-request, also zero HTTP calls
 $itemsA = Accurate::connection('default')->on('1234567')->items()->list();
 $itemsB = Accurate::connection('default')->on('99999')->items()->list();
+
+// Works with ALL calling styles:
+Accurate::connection('default')->on('1234567')->get('api/item/list.do', ['sp.pageSize' => '20']);
+Accurate::connection('default')->on('1234567')->post('api/item/save.do', ['name' => 'Kabel USB-C', 'itemType' => 'INVENTORY']);
+Accurate::connection('default')->on('1234567')->resource('customer')->list();
+Accurate::connection('default')->on('1234567')->items()->query()
+    ->select('id', 'no', 'name')
+    ->where('keywords', 'like', 'Kabel')
+    ->get();
 ```
 
 | Method               | API call? | Use case                                |
