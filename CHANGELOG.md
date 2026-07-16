@@ -2,7 +2,7 @@
 
 All notable changes to `laravel-accurate` will be documented in this file.
 
-## v0.3.1 - 2026-07-16
+## v0.3.2 - 2026-07-16
 
 ### Fixed
 
