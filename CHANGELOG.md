@@ -2,6 +2,12 @@
 
 All notable changes to `laravel-accurate` will be documented in this file.
 
+## v0.5.1 - 2026-07-17
+
+### Changed
+
+- **Session handling moved from model to `LaravelAccurate`** — `currentDatabase()` and `switchDatabase()` are now instance methods on `LaravelAccurate` instead of static methods on the `AccurateDatabase` Eloquent model. The model no longer depends on HTTP session, making it usable in CLI/queue contexts without side effects.
+
 ## v0.4.1 - 2026-07-16
 
 ### Added

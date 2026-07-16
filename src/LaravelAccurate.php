@@ -81,7 +81,7 @@ class LaravelAccurate implements Arrayable
             ]
         );
 
-        AccurateDatabase::switchTo($this->database);
+        $this->switchDatabase($this->database);
 
         return $this;
     }
@@ -116,7 +116,7 @@ class LaravelAccurate implements Arrayable
         }
 
         // Auto-resolve from the session's active database.
-        $database = AccurateDatabase::current();
+        $database = $this->currentDatabase();
 
         if ($database) {
             $this->connection = $database->connection;
@@ -206,19 +206,21 @@ class LaravelAccurate implements Arrayable
     }
 
     /**
-     * Get the currently active database from session, or fallback to default.
+     * Get the currently active database from session.
      */
-    public static function currentDatabase(): ?AccurateDatabase
+    public function currentDatabase(): ?AccurateDatabase
     {
-        return AccurateDatabase::current();
+        $id = session('accurate_active_database_id');
+
+        return AccurateDatabase::find($id);
     }
 
     /**
      * Switch the active database in session.
      */
-    public static function switchDatabase(AccurateDatabase $database): void
+    public function switchDatabase(AccurateDatabase $database): void
     {
-        AccurateDatabase::switchTo($database);
+        session(['accurate_active_database_id' => $database->id]);
     }
 
     public function get(string $endpoint, array $params = []): array
