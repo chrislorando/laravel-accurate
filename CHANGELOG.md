@@ -2,6 +2,12 @@
 
 All notable changes to `laravel-accurate` will be documented in this file.
 
+## v0.3.3 - 2026-07-16
+
+### Changed
+
+- **README docs** — added sample OAuth routes (`accurate/connect`, `accurate/callback`, `accurate/databases`). Expanded `on()` examples with `get()`, `post()`, `resource()`, and query builder.
+
 ## v0.3.2 - 2026-07-16
 
 ### Fixed
