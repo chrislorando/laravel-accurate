@@ -10,6 +10,7 @@ use ChrisLorando\LaravelAccurate\Http\Resources\Resource;
 use ChrisLorando\LaravelAccurate\Models\AccurateConnection;
 use ChrisLorando\LaravelAccurate\Models\AccurateDatabase;
 use GuzzleHttp\Psr7\Response;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 beforeEach(function () {
     $tokenManager = Mockery::mock(TokenManager::class);
@@ -88,7 +89,7 @@ it('on() throws when database not found', function () {
     $this->app->instance(AccountClient::class, $accountClient);
 
     Accurate::connection('default')->on('non-existent');
-})->throws(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
+})->throws(ModelNotFoundException::class);
 
 it('on() does not switch session', function () {
     // First set session to a known database
@@ -460,4 +461,4 @@ it('ensureConnection() throws when no session and no explicit connection', funct
     AccurateDatabase::query()->delete();
 
     Accurate::items()->list();
-})->throws(\RuntimeException::class, 'No Accurate connection selected');
+})->throws(RuntimeException::class, 'No Accurate connection selected');

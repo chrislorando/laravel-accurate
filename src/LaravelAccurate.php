@@ -2,7 +2,6 @@
 
 namespace ChrisLorando\LaravelAccurate;
 
-use Illuminate\Contracts\Support\Arrayable;
 use ChrisLorando\LaravelAccurate\Http\AccountClient;
 use ChrisLorando\LaravelAccurate\Http\ApiClient;
 use ChrisLorando\LaravelAccurate\Http\Resources\ItemCategoryResource;
@@ -11,6 +10,8 @@ use ChrisLorando\LaravelAccurate\Http\Resources\Resource;
 use ChrisLorando\LaravelAccurate\Models\AccurateConnection;
 use ChrisLorando\LaravelAccurate\Models\AccurateDatabase;
 use ChrisLorando\LaravelAccurate\OAuth\OAuthClient;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Carbon;
 
 class LaravelAccurate implements Arrayable
 {
@@ -74,7 +75,7 @@ class LaravelAccurate implements Arrayable
                 'company_name' => $alias ?? $databaseId,
                 'host' => $host,
                 'session_id' => $result['session'],
-                'session_expires_at' => \Illuminate\Support\Carbon::createFromFormat('d/m/Y', $result['accessibleUntil']),
+                'session_expires_at' => Carbon::createFromFormat('d/m/Y', $result['accessibleUntil']),
             ]
         );
 
@@ -157,7 +158,8 @@ class LaravelAccurate implements Arrayable
         return match ($name) {
             'item' => new ItemResource($api),
             'item-category' => new ItemCategoryResource($api),
-            default => new class($api, $name) extends Resource {
+            default => new class($api, $name) extends Resource
+            {
                 public function __construct(ApiClient $api, string $resourceName)
                 {
                     parent::__construct($api);
