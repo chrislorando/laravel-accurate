@@ -4,9 +4,17 @@ namespace ChrisLorando\LaravelAccurate;
 
 use ChrisLorando\LaravelAccurate\Http\AccountClient;
 use ChrisLorando\LaravelAccurate\Http\ApiClient;
+use ChrisLorando\LaravelAccurate\Http\Resources\BranchResource;
+use ChrisLorando\LaravelAccurate\Http\Resources\CurrencyResource;
+use ChrisLorando\LaravelAccurate\Http\Resources\DepartmentResource;
+use ChrisLorando\LaravelAccurate\Http\Resources\EmployeeResource;
+use ChrisLorando\LaravelAccurate\Http\Resources\ExpenseResource;
+use ChrisLorando\LaravelAccurate\Http\Resources\FobResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\ItemCategoryResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\ItemResource;
+use ChrisLorando\LaravelAccurate\Http\Resources\PaymentTermResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\Resource;
+use ChrisLorando\LaravelAccurate\Http\Resources\TaxResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\UnitResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\WarehouseResource;
 use ChrisLorando\LaravelAccurate\Models\AccurateConnection;
@@ -158,8 +166,16 @@ class LaravelAccurate implements Arrayable
         $api = $this->client();
 
         return match ($name) {
+            'branch' => new BranchResource($api),
+            'currency' => new CurrencyResource($api),
+            'department' => new DepartmentResource($api),
+            'employee' => new EmployeeResource($api),
+            'expense' => new ExpenseResource($api),
+            'fob' => new FobResource($api),
             'item' => new ItemResource($api),
+            'tax' => new TaxResource($api),
             'item-category' => new ItemCategoryResource($api),
+            'payment-term' => new PaymentTermResource($api),
             'unit' => new UnitResource($api),
             'warehouse' => new WarehouseResource($api),
             default => new class($api, $name) extends Resource
@@ -195,6 +211,70 @@ class LaravelAccurate implements Arrayable
     public function units(): UnitResource
     {
         return new UnitResource($this->client());
+    }
+
+    /**
+     * Convenience shortcut for ->resource('branch').
+     */
+    public function branches(): BranchResource
+    {
+        return new BranchResource($this->client());
+    }
+
+    /**
+     * Convenience shortcut for ->resource('currency').
+     */
+    public function currencies(): CurrencyResource
+    {
+        return new CurrencyResource($this->client());
+    }
+
+    /**
+     * Convenience shortcut for ->resource('department').
+     */
+    public function departments(): DepartmentResource
+    {
+        return new DepartmentResource($this->client());
+    }
+
+    /**
+     * Convenience shortcut for ->resource('tax').
+     */
+    public function taxes(): TaxResource
+    {
+        return new TaxResource($this->client());
+    }
+
+    /**
+     * Convenience shortcut for ->resource('employee').
+     */
+    public function employees(): EmployeeResource
+    {
+        return new EmployeeResource($this->client());
+    }
+
+    /**
+     * Convenience shortcut for ->resource('expense').
+     */
+    public function expenses(): ExpenseResource
+    {
+        return new ExpenseResource($this->client());
+    }
+
+    /**
+     * Convenience shortcut for ->resource('fob').
+     */
+    public function fobs(): FobResource
+    {
+        return new FobResource($this->client());
+    }
+
+    /**
+     * Convenience shortcut for ->resource('payment-term').
+     */
+    public function paymentTerms(): PaymentTermResource
+    {
+        return new PaymentTermResource($this->client());
     }
 
     /**
