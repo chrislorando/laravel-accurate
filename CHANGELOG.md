@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-accurate` will be documented in this file.
 
+## v0.6.0 - 2026-07-18
+
+### Added
+
+- **8 new dedicated resource classes** — `BranchResource`, `CurrencyResource`, `DepartmentResource`, `EmployeeResource`, `ExpenseResource`, `FobResource`, `PaymentTermResource`, `TaxResource`. Each wired in `LaravelAccurate.php` with a convenience method (`branches()`, `currencies()`, `departments()`, `employees()`, `expenses()`, `fobs()`, `paymentTerms()`, `taxes()`).
+- **`CurrencyResource` extra endpoints** — `exchangeRate(currencyCode, ?transDate)` and `fiscalRate(currencyCode, ?transDate)` for `/api/currency/exchange-rate.do` and `/api/currency/fiscal-rate.do`.
+
+### Changed
+
+- **Test strategy** — only resources with custom logic beyond base CRUD get dedicated test files. Redundant per-resource CRUD tests removed.
+- **Test cleanup** — deleted `ItemCategoryResourceTest`, `UnitResourceTest`, `WarehouseResourceTest` (no custom logic). Added `CurrencyResourceTest` (extra endpoints). `ItemResourceTest` retained (7 custom methods).
+
 ## v0.5.1 - 2026-07-17
 
 ### Changed
