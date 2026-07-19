@@ -4,6 +4,7 @@ namespace ChrisLorando\LaravelAccurate;
 
 use ChrisLorando\LaravelAccurate\Http\AccountClient;
 use ChrisLorando\LaravelAccurate\Http\ApiClient;
+use ChrisLorando\LaravelAccurate\Http\Resources\BankTransferResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\BranchResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\CurrencyResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\DepartmentResource;
@@ -12,6 +13,8 @@ use ChrisLorando\LaravelAccurate\Http\Resources\ExpenseResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\FobResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\ItemCategoryResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\ItemResource;
+use ChrisLorando\LaravelAccurate\Http\Resources\OtherDepositResource;
+use ChrisLorando\LaravelAccurate\Http\Resources\OtherPaymentResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\PaymentTermResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\Resource;
 use ChrisLorando\LaravelAccurate\Http\Resources\TaxResource;
@@ -166,6 +169,7 @@ class LaravelAccurate implements Arrayable
         $api = $this->client();
 
         return match ($name) {
+            'bank-transfer' => new BankTransferResource($api),
             'branch' => new BranchResource($api),
             'currency' => new CurrencyResource($api),
             'department' => new DepartmentResource($api),
@@ -177,6 +181,8 @@ class LaravelAccurate implements Arrayable
             'item-category' => new ItemCategoryResource($api),
             'payment-term' => new PaymentTermResource($api),
             'unit' => new UnitResource($api),
+            'other-deposit' => new OtherDepositResource($api),
+            'other-payment' => new OtherPaymentResource($api),
             'warehouse' => new WarehouseResource($api),
             default => new class($api, $name) extends Resource
             {
@@ -211,6 +217,14 @@ class LaravelAccurate implements Arrayable
     public function units(): UnitResource
     {
         return new UnitResource($this->client());
+    }
+
+    /**
+     * Convenience shortcut for ->resource('bank-transfer').
+     */
+    public function bankTransfers(): BankTransferResource
+    {
+        return new BankTransferResource($this->client());
     }
 
     /**
@@ -275,6 +289,22 @@ class LaravelAccurate implements Arrayable
     public function paymentTerms(): PaymentTermResource
     {
         return new PaymentTermResource($this->client());
+    }
+
+    /**
+     * Convenience shortcut for ->resource('other-deposit').
+     */
+    public function otherDeposits(): OtherDepositResource
+    {
+        return new OtherDepositResource($this->client());
+    }
+
+    /**
+     * Convenience shortcut for ->resource('other-payment').
+     */
+    public function otherPayments(): OtherPaymentResource
+    {
+        return new OtherPaymentResource($this->client());
     }
 
     /**

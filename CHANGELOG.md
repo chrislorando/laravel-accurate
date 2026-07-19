@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-accurate` will be documented in this file.
 
+## v0.7.0 - 2026-07-20
+
+### Added
+
+- **`OtherPaymentResource`** — dedicated resource for `/api/other-payment` endpoint. `Accurate::otherPayments()` convenience method.
+- **`OtherDepositResource`** — dedicated resource for `/api/other-deposit` endpoint. `Accurate::otherDeposits()` convenience method.
+- **`BankTransferResource`** — dedicated resource for `/api/bank-transfer` endpoint. `Accurate::bankTransfers()` convenience method.
+
 ## v0.6.0 - 2026-07-18
 
 ### Added
