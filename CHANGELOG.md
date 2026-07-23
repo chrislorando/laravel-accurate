@@ -2,6 +2,15 @@
 
 All notable changes to `laravel-accurate` will be documented in this file.
 
+## v0.8.0 - 2026-07-24
+
+### Added
+
+- **`SalesQuotationResource`** — dedicated resource for `/api/sales-quotation` endpoint. `Accurate::salesQuotations()` convenience method with full CRUD + bulk-save + query builder support.
+- **`SalesOrderResource`** — dedicated resource for `/api/sales-order` endpoint. `Accurate::salesOrders()` convenience method with full CRUD + bulk-save + query builder support.
+- **`SalesOrderResource.manualCloseOrder()`** — custom method for POST `/api/sales-order/manual-close-order.do`. Closes (`orderClosed = true`, default) or reopens a Sales Order by its SO number.
+- **`SalesOrderResourceTest`** — dedicated test file covering `manualCloseOrder()` (default close, explicit close, reopen scenarios).
+
 ## v0.7.0 - 2026-07-20
 
 ### Added

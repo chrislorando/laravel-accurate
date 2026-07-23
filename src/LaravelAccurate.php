@@ -17,6 +17,7 @@ use ChrisLorando\LaravelAccurate\Http\Resources\OtherDepositResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\OtherPaymentResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\PaymentTermResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\Resource;
+use ChrisLorando\LaravelAccurate\Http\Resources\SalesQuotationResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\TaxResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\UnitResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\WarehouseResource;
@@ -183,6 +184,7 @@ class LaravelAccurate implements Arrayable
             'unit' => new UnitResource($api),
             'other-deposit' => new OtherDepositResource($api),
             'other-payment' => new OtherPaymentResource($api),
+            'sales-quotation' => new SalesQuotationResource($api),
             'warehouse' => new WarehouseResource($api),
             default => new class($api, $name) extends Resource
             {
@@ -305,6 +307,14 @@ class LaravelAccurate implements Arrayable
     public function otherPayments(): OtherPaymentResource
     {
         return new OtherPaymentResource($this->client());
+    }
+
+    /**
+     * Convenience shortcut for ->resource('sales-quotation').
+     */
+    public function salesQuotations(): SalesQuotationResource
+    {
+        return new SalesQuotationResource($this->client());
     }
 
     /**
