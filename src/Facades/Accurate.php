@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \ChrisLorando\LaravelAccurate\Http\Resources\OtherPaymentResource otherPayments()
  * @method static \ChrisLorando\LaravelAccurate\Http\Resources\SalesInvoiceResource salesInvoices()
  * @method static \ChrisLorando\LaravelAccurate\Http\Resources\SalesQuotationResource salesQuotations()
+ * @method static \ChrisLorando\LaravelAccurate\Http\Resources\SalesReturnResource salesReturns()
  * @method static \ChrisLorando\LaravelAccurate\Http\Resources\WarehouseResource warehouses()
  * @method static array get(string $endpoint, array $params = [])
  *

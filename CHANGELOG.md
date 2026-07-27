@@ -2,6 +2,17 @@
 
 All notable changes to `laravel-accurate` will be documented in this file.
 
+## v0.9.0 - 2026-07-28
+
+### Added
+
+- **`DeliveryOrderResource`** — dedicated resource for `/api/delivery-order` endpoint. `Accurate::deliveryOrders()` convenience method with full CRUD + bulk-save + query builder support.
+- **`SalesInvoiceResource`** — dedicated resource for `/api/sales-invoice` endpoint. `Accurate::salesInvoices()` convenience method with two custom endpoints:
+    - `createDownPayment(array $data)` — POST `/api/sales-invoice/create-down-payment.do`.
+    - `detailInvoice(string $customerNo, array $params)` — GET `/api/sales-invoice/detail-invoice.do` with optional filters.
+- **`SalesReturnResource`** — dedicated resource for `/api/sales-return` endpoint. `Accurate::salesReturns()` convenience method with full CRUD + bulk-save + query builder support.
+- **`SalesInvoiceResourceTest`** — test coverage for `createDownPayment()` and `detailInvoice()` custom endpoints.
+
 ## v0.8.0 - 2026-07-24
 
 ### Added
