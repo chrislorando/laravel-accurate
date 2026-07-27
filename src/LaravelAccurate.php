@@ -7,6 +7,7 @@ use ChrisLorando\LaravelAccurate\Http\ApiClient;
 use ChrisLorando\LaravelAccurate\Http\Resources\BankTransferResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\BranchResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\CurrencyResource;
+use ChrisLorando\LaravelAccurate\Http\Resources\DeliveryOrderResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\DepartmentResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\EmployeeResource;
 use ChrisLorando\LaravelAccurate\Http\Resources\ExpenseResource;
@@ -173,6 +174,7 @@ class LaravelAccurate implements Arrayable
             'bank-transfer' => new BankTransferResource($api),
             'branch' => new BranchResource($api),
             'currency' => new CurrencyResource($api),
+            'delivery-order' => new DeliveryOrderResource($api),
             'department' => new DepartmentResource($api),
             'employee' => new EmployeeResource($api),
             'expense' => new ExpenseResource($api),
@@ -245,7 +247,15 @@ class LaravelAccurate implements Arrayable
         return new CurrencyResource($this->client());
     }
 
+    /**livery-order').
+     */
+    public function deliveryOrders(): DeliveryOrderResource
+    {
+        return new DeliveryOrderResource($this->client());
+    }
+
     /**
+     * Convenience shortcut for ->resource('de
      * Convenience shortcut for ->resource('department').
      */
     public function departments(): DepartmentResource

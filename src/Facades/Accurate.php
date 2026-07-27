@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \ChrisLorando\LaravelAccurate\Http\Resources\BankTransferResource bankTransfers()
  * @method static \ChrisLorando\LaravelAccurate\Http\Resources\BranchResource branches()
  * @method static \ChrisLorando\LaravelAccurate\Http\Resources\CurrencyResource currencies()
+ * @method static \ChrisLorando\LaravelAccurate\Http\Resources\DeliveryOrderResource deliveryOrders()
  * @method static \ChrisLorando\LaravelAccurate\Http\Resources\DepartmentResource departments()
  * @method static \ChrisLorando\LaravelAccurate\Http\Resources\TaxResource taxes()
  * @method static \ChrisLorando\LaravelAccurate\Http\Resources\EmployeeResource employees()
