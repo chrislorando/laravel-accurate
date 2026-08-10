@@ -2,6 +2,16 @@
 
 All notable changes to `laravel-accurate` will be documented in this file.
 
+## v0.9.1 - 2026-08-10
+
+### Added
+
+- **`LaravelAccurate::postJson()`** — convenience method for JSON POST requests, delegates to the underlying HTTP client.
+
+### Changed
+
+- **Pint formatting** — fixed malformed docblocks on `deliveryOrders()` and `salesReturns()`, normalized line endings across 6 files.
+
 ## v0.9.0 - 2026-07-28
 
 ### Added

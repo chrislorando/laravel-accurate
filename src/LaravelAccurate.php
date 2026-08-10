@@ -251,7 +251,8 @@ class LaravelAccurate implements Arrayable
         return new CurrencyResource($this->client());
     }
 
-    /**livery-order').
+    /**
+     * Convenience shortcut for ->resource('delivery-order').
      */
     public function deliveryOrders(): DeliveryOrderResource
     {
@@ -259,7 +260,6 @@ class LaravelAccurate implements Arrayable
     }
 
     /**
-     * Convenience shortcut for ->resource('de
      * Convenience shortcut for ->resource('department').
      */
     public function departments(): DepartmentResource
@@ -339,7 +339,8 @@ class LaravelAccurate implements Arrayable
         return new SalesQuotationResource($this->client());
     }
 
-    /**sales-return').
+    /**
+     * Convenience shortcut for ->resource('sales-return').
      */
     public function salesReturns(): SalesReturnResource
     {
@@ -347,7 +348,6 @@ class LaravelAccurate implements Arrayable
     }
 
     /**
-     * Convenience shortcut for ->resource('
      * Convenience shortcut for ->resource('warehouse').
      */
     public function warehouses(): WarehouseResource
@@ -381,6 +381,11 @@ class LaravelAccurate implements Arrayable
     public function post(string $endpoint, array $data = []): array
     {
         return $this->client()->post($endpoint, $data);
+    }
+
+    public function postJson(string $endpoint, array $data = []): array
+    {
+        return $this->client()->postJson($endpoint, $data);
     }
 
     public function put(string $endpoint, array $data = []): array
